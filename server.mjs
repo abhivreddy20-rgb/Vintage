@@ -51,7 +51,7 @@ const rateLimitStore = new Map();
 const resendApiKey = process.env.RESEND_API_KEY;
 const adminEmail = process.env.ADMIN_EMAIL;
 const enquiryFromEmail =
-  process.env.ENQUIRY_FROM_EMAIL ?? "Vintage Enquiries <onboarding@resend.dev>";
+  process.env.ENQUIRY_FROM_EMAIL ?? "Vintage Vineyard Estates <onboarding@resend.dev>";
 
 const contentTypes = {
   ".html": "text/html; charset=utf-8",
@@ -259,11 +259,15 @@ async function sendAdminNotification(enquiry, savedEnquiry) {
   const submittedAt =
     savedEnquiry?.created_at ?? savedEnquiry?.createdAt ?? new Date().toISOString();
   const subject = `New Vintage Vineyard Estates enquiry from ${enquiry.name}`;
+  const replyHref = `mailto:${encodeURIComponent(enquiry.email)}?subject=${encodeURIComponent(
+    `Re: ${subject}`,
+  )}`;
   const html = `
     <div style="font-family:Arial,sans-serif;line-height:1.5;color:#242426">
       <h2 style="margin:0 0 16px">New enquiry</h2>
       <p><strong>Name:</strong> ${escapeHtml(enquiry.name)}</p>
       <p><strong>Email:</strong> <a href="mailto:${escapeHtml(enquiry.email)}">${escapeHtml(enquiry.email)}</a></p>
+      <p><a href="${replyHref}" style="display:inline-block;padding:10px 14px;background:#99463f;color:#ffffff;text-decoration:none;border-radius:4px">Reply to customer</a></p>
       <p><strong>Submitted:</strong> ${escapeHtml(submittedAt)}</p>
       <p><strong>Details:</strong></p>
       <div style="white-space:pre-wrap;padding:14px;background:#f8f4ee;border-left:4px solid #99463f">${escapeHtml(enquiry.message)}</div>
@@ -351,6 +355,9 @@ async function handleApi(req, res) {
       await sendAdminNotification(enquiry, saved);
     } catch (error) {
       console.error(error);
+      error.publicMessage =
+        "Enquiry was saved, but the admin email could not be sent.";
+      throw error;
     }
     sendJson(res, 201, { enquiry: saved });
     return;

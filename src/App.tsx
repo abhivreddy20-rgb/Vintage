@@ -22,13 +22,10 @@ import sunroom3Image from "./images/sunrrom3.avif";
 
 const media = {
   hero: exteriorImage,
-  video:
-    "https://videos.pexels.com/video-files/7578546/7578546-hd_1920_1080_30fps.mp4",
 };
 
 const navItems = [
   { label: "Stay", href: "#stay" },
-  { label: "Video", href: "#live-video" },
   { label: "Gallery", href: "#gallery" },
   { label: "Enquiry", href: "#enquiry" },
   { label: "Address", href: "#address" },
@@ -157,8 +154,8 @@ const gallerySections = [
     ],
   },
   {
-    title: "Vineyard View",
-    copy: "Practical stay support spaces kept together for easy review.",
+    title: "Laundry & Garage",
+    copy: "Practical laundry and garage spaces for everyday needs.",
     images: [
       {
         image: laundryImage,
@@ -255,7 +252,9 @@ function App() {
 
       form.reset();
       setEnquiryStatus("success");
-      setEnquiryMessage("Your enquiry has been saved. We will reply soon.");
+      setEnquiryMessage(
+        "Thank You! We have received your details and will connect with you shortly.",
+      );
     } catch (error) {
       setEnquiryStatus("error");
       setEnquiryMessage(
@@ -292,9 +291,6 @@ function App() {
               <a className="button primary" href="#enquiry">
                 Send Enquiry
               </a>
-              <a className="button ghost" href="#live-video">
-                Watch Video
-              </a>
             </div>
           </div>
           <div className="hero-card" aria-label="Airbnb highlights">
@@ -314,30 +310,6 @@ function App() {
               ready for light cooking, and the main living space is set up for
               streaming, work, and downtime.
             </p>
-          </div>
-        </section>
-
-        <section className="video-section" id="live-video">
-          <div className="video-copy">
-            <p className="eyebrow">Live Video Preview</p>
-            <h2>See the space in motion.</h2>
-            <p>
-              A looping video preview gives guests a quick feel for the light,
-              layout, and atmosphere before sending an enquiry.
-            </p>
-          </div>
-          <div className="video-frame">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster={sunroom1Image}
-              aria-label="Video preview of a comfortable Airbnb-style home"
-            >
-              <source src={media.video} type="video/mp4" />
-            </video>
-            <span>Playing Now</span>
           </div>
         </section>
 
@@ -377,20 +349,16 @@ function App() {
 
         <section className="enquiry section-band" id="enquiry">
           <div>
-            <p className="section-kicker">Enquiry</p>
-            <h2>Ask about dates, pricing, and stay details.</h2>
+            <h2>Booking Enquiries</h2>
             <p>
-              No registration needed. Share your email and a few details about
-              the stay you are planning, and we will respond with availability,
-              house details, and booking guidance.
+              Have questions about dates, pricing, or amenities? We are here to
+              help! No account required. Just share your email and a few details
+              about your upcoming trip, and our team will follow up shortly with
+              full property details and booking next steps.
             </p>
           </div>
 
           <form className="enquiry-form" onSubmit={handleEnquirySubmit}>
-            <label className="bot-field" aria-hidden="true">
-              Company
-              <Input name="company" tabIndex={-1} autoComplete="off" />
-            </label>
             <label>
               Name
               <Input name="name" autoComplete="name" placeholder="Your name" />
@@ -448,9 +416,10 @@ function App() {
       <footer className="site-footer" id="address">
         <p>Vintage Vineyard Estates</p>
         <address>1000 Vintage Dr, Oakley, CA 94561</address>
-        <a href="mailto:stay@vintageairbnb.example">
-          stay@vintageairbnb.example
-        </a>
+        <div className="footer-contact">
+          <span>Contact Us On:</span>
+          <a href="mailto:Mada.sreedhar@gmail.com">Mada.sreedhar@gmail.com</a>
+        </div>
       </footer>
     </>
   );
@@ -689,52 +658,7 @@ h3 {
   gap: clamp(28px, 6vw, 86px);
   align-items: end;
 }
-.intro p, .video-copy p, .enquiry p { color: var(--muted); font-size: 1.08rem; }
-
-.video-section {
-  display: grid;
-  grid-template-columns: minmax(280px, 0.7fr) minmax(360px, 1fr);
-  gap: clamp(34px, 7vw, 90px);
-  align-items: center;
-  padding: clamp(70px, 9vw, 124px) clamp(20px, 7vw, 96px);
-  background: var(--moss);
-  color: var(--white);
-}
-.video-copy p:not(.eyebrow) {
-  max-width: 42ch;
-  color: rgba(255, 253, 250, 0.88);
-}
-.video-copy .eyebrow {
-  color: #ffd68c;
-}
-.video-copy h2 {
-  color: var(--white);
-  font-size: clamp(1.95rem, 3.4vw, 3.15rem);
-  white-space: nowrap;
-}
-.video-frame {
-  position: relative;
-  min-width: 0;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: #151614;
-  box-shadow: var(--shadow);
-}
-.video-frame span {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
-  display: inline-flex;
-  min-height: 32px;
-  align-items: center;
-  padding: 7px 11px;
-  background: rgba(0, 0, 0, 0.58);
-  color: var(--white);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
+.intro p, .enquiry p { color: var(--muted); font-size: 1.08rem; }
 
 .gallery { background: var(--white); }
 .gallery .section-heading {
@@ -759,12 +683,15 @@ h3 {
 }
 .gallery-room {
   display: grid;
+  grid-template-rows: minmax(74px, auto) auto;
   gap: 7px;
   min-width: 0;
 }
 .gallery-room-heading {
   display: grid;
+  align-content: start;
   gap: 5px;
+  min-height: 74px;
   border-bottom: 1px solid rgba(36, 36, 38, 0.14);
   padding-bottom: 6px;
 }
@@ -904,14 +831,14 @@ h3 {
   box-shadow: var(--shadow);
   min-width: 0;
 }
-label {
+.enquiry-form label {
   display: grid;
   gap: 8px;
   color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .full-field,
 .enquiry-form .tamagui-submit {
@@ -973,6 +900,17 @@ label {
   color: #f1dfbd;
   font-style: normal;
 }
+.footer-contact {
+  display: grid;
+  gap: 4px;
+}
+.footer-contact span {
+  color: var(--white);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 .site-footer a { color: #f1dfbd; }
 
 @media (max-width: 980px) {
@@ -986,12 +924,14 @@ label {
     gap: 18px;
   }
   .gallery-room {
+    grid-template-rows: auto auto;
     gap: 8px;
   }
   .gallery-room-heading {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: end;
     gap: 12px;
+    min-height: 0;
   }
   .gallery-room-heading p {
     display: none;
@@ -1032,9 +972,7 @@ label {
   .site-nav.is-open { transform: translateY(0); }
   .site-nav a { border-top: 1px solid rgba(36, 36, 38, 0.14); padding: 17px 0; }
   .nav-cta { border-right: 0; border-left: 0; }
-  .intro-grid, .video-section, .section-heading, .enquiry { grid-template-columns: 1fr; }
-  .video-section { gap: 28px; }
-  .video-copy h2 { white-space: normal; }
+  .intro-grid, .section-heading, .enquiry { grid-template-columns: 1fr; }
   .enquiry-form { max-width: 640px; }
   .hero-content { max-width: 560px; }
 }
@@ -1060,10 +998,9 @@ label {
     bottom: 16px;
     font-size: 0.68rem;
   }
-  .section-band, .video-section { padding: 58px 18px; }
+  .section-band { padding: 58px 18px; }
   .section-heading { margin-bottom: 22px; }
-  .intro p, .video-copy p, .enquiry p { font-size: 0.98rem; }
-  .video-frame { box-shadow: 0 14px 36px rgba(36, 36, 38, 0.16); }
+  .intro p, .enquiry p { font-size: 0.98rem; }
   .gallery-sections { gap: 16px; }
   .gallery-room-heading { grid-template-columns: 1fr; }
   .image-carousel { aspect-ratio: 1.25 / 1; }
@@ -1117,7 +1054,7 @@ label {
     line-height: 1.25;
   }
   .hero-card span:not(:last-child)::after { display: none; }
-  .section-band, .video-section { padding: 50px 14px; }
+  .section-band { padding: 50px 14px; }
   .gallery-sections { gap: 14px; }
   .image-carousel { aspect-ratio: 1.12 / 1; }
   .carousel-arrow { width: 38px; height: 46px; }
