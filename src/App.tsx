@@ -419,6 +419,7 @@ function App() {
         <div className="footer-contact">
           <span>Contact Us On:</span>
           <a href="mailto:Mada.sreedhar@gmail.com">Mada.sreedhar@gmail.com</a>
+          <a href="tel:+1234567890">+1 (925)-549-2107</a>
         </div>
       </footer>
     </>
