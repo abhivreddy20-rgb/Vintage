@@ -39,12 +39,12 @@ const gallerySections = [
       {
         image: exteriorImage,
         title: "Front Exterior",
-        alt: "Front exterior of the Vintage Vineyard Estates home",
+        alt: "Front exterior of the Vintage Vineyard Estate home",
       },
       {
         image: exterior2Image,
         title: "Exterior View",
-        alt: "Second exterior view of the Vintage Vineyard Estates home",
+        alt: "Second exterior view of the Vintage Vineyard Estate home",
       },
     ],
   },
@@ -55,22 +55,22 @@ const gallerySections = [
       {
         image: bedroom1Image,
         title: "Bedroom One",
-        alt: "Bedroom one at Vintage Vineyard Estates",
+        alt: "Bedroom one at Vintage Vineyard Estate",
       },
       {
         image: bedroom2Image,
         title: "Bedroom Two",
-        alt: "Bedroom two at Vintage Vineyard Estates",
+        alt: "Bedroom two at Vintage Vineyard Estate",
       },
       {
         image: bedroom3Image,
         title: "Bedroom Three",
-        alt: "Bedroom three at Vintage Vineyard Estates",
+        alt: "Bedroom three at Vintage Vineyard Estate",
       },
       {
         image: bedroom4Image,
         title: "Bedroom Four",
-        alt: "Bedroom four at Vintage Vineyard Estates",
+        alt: "Bedroom four at Vintage Vineyard Estate",
       },
     ],
   },
@@ -81,17 +81,17 @@ const gallerySections = [
       {
         image: bathroom1Image,
         title: "Bathroom One",
-        alt: "Bathroom one at Vintage Vineyard Estates",
+        alt: "Bathroom one at Vintage Vineyard Estate",
       },
       {
         image: bathroom2Image,
         title: "Bathroom Two",
-        alt: "Bathroom two at Vintage Vineyard Estates",
+        alt: "Bathroom two at Vintage Vineyard Estate",
       },
       {
         image: bathroom3Image,
         title: "Bathroom Three",
-        alt: "Bathroom three at Vintage Vineyard Estates",
+        alt: "Bathroom three at Vintage Vineyard Estate",
       },
     ],
   },
@@ -102,12 +102,12 @@ const gallerySections = [
       {
         image: kitchen1Image,
         title: "Kitchen",
-        alt: "Kitchen at Vintage Vineyard Estates",
+        alt: "Kitchen at Vintage Vineyard Estate",
       },
       {
         image: kitchen2Image,
         title: "Kitchen Dining",
-        alt: "Second kitchen view at Vintage Vineyard Estates",
+        alt: "Second kitchen view at Vintage Vineyard Estate",
       },
     ],
   },
@@ -118,17 +118,17 @@ const gallerySections = [
       {
         image: sunroom1Image,
         title: "Sunroom",
-        alt: "Sunroom one at Vintage Vineyard Estates",
+        alt: "Sunroom one at Vintage Vineyard Estate",
       },
       {
         image: sunroom2Image,
         title: "Sunroom",
-        alt: "Sunroom two at Vintage Vineyard Estates",
+        alt: "Sunroom two at Vintage Vineyard Estate",
       },
       {
         image: sunroom3Image,
         title: "Sunroom",
-        alt: "Sunroom three at Vintage Vineyard Estates",
+        alt: "Sunroom three at Vintage Vineyard Estate",
       },
     ],
   },
@@ -139,17 +139,17 @@ const gallerySections = [
       {
         image: gameroom1Image,
         title: "Game Room",
-        alt: "Game room one at Vintage Vineyard Estates",
+        alt: "Game room one at Vintage Vineyard Estate",
       },
       {
         image: gameroom2Image,
         title: "Game Room",
-        alt: "Game room two at Vintage Vineyard Estates",
+        alt: "Game room two at Vintage Vineyard Estate",
       },
       {
         image: gameroom3Image,
         title: "Game Room",
-        alt: "Game room three at Vintage Vineyard Estates",
+        alt: "Game room three at Vintage Vineyard Estate",
       },
     ],
   },
@@ -160,12 +160,12 @@ const gallerySections = [
       {
         image: laundryImage,
         title: "Laundry",
-        alt: "Laundry area at Vintage Vineyard Estates",
+        alt: "Laundry area at Vintage Vineyard Estate",
       },
       {
         image: garageImage,
         title: "Garage",
-        alt: "Garage at Vintage Vineyard Estates",
+        alt: "Garage at Vintage Vineyard Estate",
       },
     ],
   },
@@ -240,7 +240,7 @@ function Header() {
     <header className={`site-header ${scrolled || open ? "is-scrolled" : ""}`}>
       <a className="brand" href="#top" aria-label="Vintage Airbnb home">
         <span>Vintage</span>
-        <small>Vineyard Estates</small>
+        <small>Vineyard Estate</small>
       </a>
 
       <button
@@ -319,8 +319,7 @@ function App() {
           </picture>
           <div className="hero-overlay" />
           <div className="hero-content">
-            <p className="eyebrow">Private Airbnb</p>
-            <h1>Vintage Vineyard Estates</h1>
+            <h1>Vintage Vineyard Estate</h1>
             <p>
               A calm, furnished home for weekend escapes, family visits, and
               longer stays. Send an enquiry with your dates and we will reply
@@ -380,7 +379,7 @@ function App() {
             "Fast Wi-Fi",
             "Kitchen essentials",
             "Laundry access",
-            "Parking guidance",
+            "Onsite Parking ",
           ].map((item) => (
             <span key={item}>{item}</span>
           ))}
@@ -453,7 +452,7 @@ function App() {
       </main>
 
       <footer className="site-footer" id="address">
-        <p>Vintage Vineyard Estates</p>
+        <p>Vintage Vineyard Estate</p>
         <address>1000 Vintage Dr, Oakley, CA 94561</address>
         <div className="footer-contact">
           <span>Contact Us On:</span>
