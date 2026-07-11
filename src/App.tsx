@@ -178,6 +178,52 @@ type GalleryImage = {
 };
 
 const apiBaseUrl = import.meta.env.DEV ? "http://127.0.0.1:4175" : "";
+const enquiryEndpoints = import.meta.env.DEV
+  ? [`${apiBaseUrl}/api/enquiries`]
+  : ["/api/enquiries", "/.netlify/functions/enquiries"];
+const savedButEmailFailedMessage =
+  "Enquiry was saved, but the admin email could not be sent.";
+
+type EnquiryPayload = {
+  name: FormDataEntryValue | null;
+  email: FormDataEntryValue | null;
+  message: FormDataEntryValue | null;
+  company: FormDataEntryValue | null;
+};
+
+async function submitEnquiry(payload: EnquiryPayload) {
+  let lastError: unknown;
+
+  for (const endpoint of enquiryEndpoints) {
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const text = await response.text();
+      const result = text ? JSON.parse(text) : {};
+
+      if (!response.ok) {
+        if (result.error === savedButEmailFailedMessage) {
+          return result;
+        }
+        throw new Error(result.error ?? "Unable to save enquiry.");
+      }
+
+      return result;
+    } catch (error) {
+      lastError = error;
+      if (!(error instanceof TypeError) && !(error instanceof SyntaxError)) {
+        throw error;
+      }
+    }
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("Unable to save enquiry right now.");
+}
 
 function Header() {
   const [open, setOpen] = useState(false);
@@ -234,21 +280,12 @@ function App() {
     setEnquiryMessage("");
 
     try {
-      const response = await fetch(`${apiBaseUrl}/api/enquiries`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.get("name"),
-          email: formData.get("email"),
-          message: formData.get("message"),
-          company: formData.get("company"),
-        }),
+      await submitEnquiry({
+        name: formData.get("name"),
+        email: formData.get("email"),
+        message: formData.get("message"),
+        company: formData.get("company"),
       });
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error ?? "Unable to save enquiry.");
-      }
 
       form.reset();
       setEnquiryStatus("success");
@@ -258,7 +295,9 @@ function App() {
     } catch (error) {
       setEnquiryStatus("error");
       setEnquiryMessage(
-        error instanceof Error
+        error instanceof TypeError
+          ? "Unable to connect right now. Please try again in a moment."
+          : error instanceof Error
           ? error.message
           : "Unable to save enquiry right now.",
       );

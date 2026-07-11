@@ -355,9 +355,6 @@ async function handleApi(req, res) {
       await sendAdminNotification(enquiry, saved);
     } catch (error) {
       console.error(error);
-      error.publicMessage =
-        "Enquiry was saved, but the admin email could not be sent.";
-      throw error;
     }
     sendJson(res, 201, { enquiry: saved });
     return;

@@ -57,6 +57,9 @@ function isAllowedOrigin(event, origin) {
   if (!origin) {
     return true;
   }
+  if (allowedOrigins.length === 0) {
+    return true;
+  }
   const host = getHeader(event.headers, "host");
   const sameSiteOrigin = host ? `https://${host}` : "";
   return origin === sameSiteOrigin || allowedOrigins.includes(origin);
@@ -146,7 +149,7 @@ async function saveEnquiry(enquiry) {
 
 async function sendAdminNotification(enquiry, savedEnquiry) {
   if (!resendApiKey || !adminEmail) {
-    return;
+    return { skipped: true };
   }
 
   const submittedAt =
@@ -182,21 +185,28 @@ async function sendAdminNotification(enquiry, savedEnquiry) {
     }),
   });
 
+  const text = await response.text();
+
   if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Admin notification failed: ${text}`);
+    throw new Error(`Admin notification failed (${response.status}): ${text}`);
   }
+
+  return { skipped: false };
 }
 
 export async function handler(event) {
   const origin = getHeader(event.headers, "origin");
 
   if (!isAllowedOrigin(event, origin)) {
-    return json(403, { error: "Origin is not allowed." });
+    return json(403, { error: "Origin is not allowed." }, origin);
   }
 
   if (event.httpMethod === "OPTIONS") {
     return json(204, {}, origin);
+  }
+
+  if (event.httpMethod === "GET") {
+    return json(200, { ok: true }, origin);
   }
 
   if (event.httpMethod !== "POST") {
@@ -233,9 +243,6 @@ export async function handler(event) {
       await sendAdminNotification(enquiry, saved);
     } catch (error) {
       console.error(error);
-      error.publicMessage =
-        "Enquiry was saved, but the admin email could not be sent.";
-      throw error;
     }
 
     return json(201, { enquiry: saved }, origin);
