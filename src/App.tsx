@@ -298,8 +298,8 @@ function App() {
         error instanceof TypeError
           ? "Unable to connect right now. Please try again in a moment."
           : error instanceof Error
-          ? error.message
-          : "Unable to save enquiry right now.",
+            ? error.message
+            : "Unable to save enquiry right now.",
       );
     }
   };
@@ -457,7 +457,7 @@ function App() {
         <address>1000 Vintage Dr, Oakley, CA 94561</address>
         <div className="footer-contact">
           <span>Contact Us On:</span>
-          <a href="mailto:Mada.sreedhar@gmail.com">Mada.sreedhar@gmail.com</a>
+          <a href="mailto:1000vintagepm@gmail.com">1000vintagepm@gmail.com</a>
           <a href="tel:+1234567890">+1 (925)-549-2107</a>
         </div>
       </footer>
