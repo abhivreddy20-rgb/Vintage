@@ -342,7 +342,7 @@ function App() {
           <p className="section-kicker">The Stay</p>
           <div className="intro-grid">
             <h2>Simple, comfortable, and ready before you arrive.</h2>
-            <p>
+            <p text-justify="inter-word">
               The home is arranged for easy arrival, relaxed mornings, and quiet
               evenings. Bedrooms are prepared with fresh linens, the kitchen is
               ready for light cooking, and the main living space is set up for
