@@ -225,7 +225,7 @@ async function submitEnquiry(payload: EnquiryPayload) {
     : new Error("Unable to save enquiry right now.");
 }
 
-function Header() {
+function Header({ onGalleryOpen }: { onGalleryOpen: () => void }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -256,7 +256,17 @@ function Header() {
 
       <nav className={`site-nav ${open ? "is-open" : ""}`}>
         {navItems.map((item) => (
-          <a key={item.href} href={item.href} onClick={() => setOpen(false)}>
+          <a
+            key={item.href}
+            href={item.href}
+            onClick={(event) => {
+              setOpen(false);
+              if (item.href === "#gallery") {
+                event.preventDefault();
+                onGalleryOpen();
+              }
+            }}
+          >
             {item.label}
           </a>
         ))}
@@ -266,10 +276,29 @@ function Header() {
 }
 
 function App() {
+  const [galleryOpen, setGalleryOpen] = useState(false);
   const [enquiryStatus, setEnquiryStatus] = useState<
     "idle" | "saving" | "success" | "error"
   >("idle");
   const [enquiryMessage, setEnquiryMessage] = useState("");
+
+  useEffect(() => {
+    document.body.classList.toggle("gallery-modal-open", galleryOpen);
+    return () => document.body.classList.remove("gallery-modal-open");
+  }, [galleryOpen]);
+
+  useEffect(() => {
+    if (!galleryOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setGalleryOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [galleryOpen]);
 
   const handleEnquirySubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -307,7 +336,7 @@ function App() {
   return (
     <>
       <style>{pageStyles}</style>
-      <Header />
+      <Header onGalleryOpen={() => setGalleryOpen(true)} />
       <main id="top">
         <section className="hero" aria-label="Vintage Airbnb Stay">
           <picture>
@@ -342,33 +371,33 @@ function App() {
           <p className="section-kicker">The Stay</p>
           <div className="intro-grid">
             <h2>Simple, comfortable, and ready before you arrive.</h2>
-            <p text-justify="inter-word">
-              The home is arranged for easy arrival, relaxed mornings, and quiet
-              evenings. Bedrooms are prepared with fresh linens, the kitchen is
-              ready for light cooking, and the main living space is set up for
-              streaming, work, and downtime.
-            </p>
-          </div>
-        </section>
-
-        <section className="gallery section-band" id="gallery">
-          <div className="section-heading">
-            <p className="section-kicker">Gallery</p>
-            <h2>Explore each space before you arrive.</h2>
-          </div>
-          <div className="gallery-sections">
-            {gallerySections.map((section) => (
-              <section className="gallery-room" key={section.title}>
-                <div className="gallery-room-heading">
-                  <div>
-                    <h3>{section.title}</h3>
-                    <span>{section.images.length} photos</span>
-                  </div>
-                  <p>{section.copy}</p>
-                </div>
-                <ImageCarousel images={section.images} label={section.title} />
-              </section>
-            ))}
+            <div className="intro-copy">
+              <p>
+                Nestled on 5+ acres of vineyard property in Oakley, California,
+                this peaceful getaway pairs wine-country charm with modern
+                comforts. Enjoy open skies, scenic vineyard views, and plenty of
+                room to relax with family, friends, or colleagues.
+              </p>
+              <p>
+                Sip morning coffee overlooking the vines, take a quiet stroll
+                through the property, or unwind in comfortable living spaces
+                prepared for easy arrivals and restful evenings.
+              </p>
+              <div className="property-highlights" aria-label="Property highlights">
+                {[
+                  "5+ acre private vineyard setting",
+                  "Spacious home for families and groups",
+                  "Fully equipped kitchen",
+                  "Fast Wi-Fi",
+                  "Ample on-site parking",
+                  "Outdoor spaces for relaxing and gathering",
+                  "Close to wineries, parks, shopping, and dining",
+                  "Easy BART access for Bay Area travel",
+                ].map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
@@ -460,7 +489,61 @@ function App() {
           <a href="tel:+1234567890">+1 (925)-549-2107</a>
         </div>
       </footer>
+
+      {galleryOpen ? (
+        <GalleryModal onClose={() => setGalleryOpen(false)} />
+      ) : null}
     </>
+  );
+}
+
+function GalleryModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div
+      className="gallery-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="gallery-modal-title"
+    >
+      <button
+        className="gallery-modal-backdrop"
+        type="button"
+        aria-label="Close gallery"
+        onClick={onClose}
+      />
+      <section className="gallery gallery-modal-panel" id="gallery">
+        <div className="gallery-modal-header">
+          <div className="section-heading">
+            <p className="section-kicker">Gallery</p>
+            <h2 id="gallery-modal-title">
+              Explore each space before you arrive.
+            </h2>
+          </div>
+          <button
+            className="gallery-modal-close"
+            type="button"
+            aria-label="Close gallery"
+            onClick={onClose}
+          >
+            ×
+          </button>
+        </div>
+        <div className="gallery-sections">
+          {gallerySections.map((section) => (
+            <section className="gallery-room" key={section.title}>
+              <div className="gallery-room-heading">
+                <div>
+                  <h3>{section.title}</h3>
+                  <span>{section.images.length} photos</span>
+                </div>
+                <p>{section.copy}</p>
+              </div>
+              <ImageCarousel images={section.images} label={section.title} />
+            </section>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -542,8 +625,10 @@ body {
   line-height: 1.5;
   overflow-x: hidden;
 }
+body.gallery-modal-open { overflow: hidden; }
 img, video { display: block; width: 100%; height: 100%; object-fit: cover; }
 a { color: inherit; text-decoration: none; }
+button { font: inherit; }
 
 .site-header {
   position: fixed;
@@ -695,11 +780,84 @@ h3 {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
   gap: clamp(28px, 6vw, 86px);
-  align-items: end;
+  align-items: start;
 }
 .intro p, .enquiry p { color: var(--muted); font-size: 1.08rem; }
+.intro-copy {
+  display: grid;
+  gap: 16px;
+}
+.intro-copy p {
+  margin-bottom: 0;
+}
+.property-highlights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+.property-highlights span {
+  display: flex;
+  min-height: 54px;
+  align-items: center;
+  border-left: 3px solid var(--gold);
+  padding: 12px 14px;
+  background: rgba(255, 253, 250, 0.72);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
 
 .gallery { background: var(--white); }
+.gallery-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: clamp(14px, 3vw, 34px);
+}
+.gallery-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(20, 19, 18, 0.72);
+  cursor: pointer;
+}
+.gallery-modal-panel {
+  position: relative;
+  z-index: 1;
+  width: min(1180px, 100%);
+  max-height: min(88vh, 920px);
+  overflow: auto;
+  padding: clamp(22px, 4vw, 44px);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.34);
+}
+.gallery-modal-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: start;
+}
+.gallery-modal-close {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(36, 36, 38, 0.18);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 2rem;
+  line-height: 1;
+}
+.gallery-modal-close:hover {
+  background: var(--brick);
+  color: var(--white);
+}
 .gallery .section-heading {
   grid-template-columns: 1fr;
   gap: 0;
@@ -1040,7 +1198,31 @@ h3 {
   .section-band { padding: 58px 18px; }
   .section-heading { margin-bottom: 22px; }
   .intro p, .enquiry p { font-size: 0.98rem; }
+  .property-highlights { grid-template-columns: 1fr; }
+  .property-highlights span {
+    min-height: 48px;
+    font-size: 0.76rem;
+  }
   .gallery-sections { gap: 16px; }
+  .gallery-modal {
+    align-items: stretch;
+    padding: 10px;
+  }
+  .gallery-modal-panel {
+    max-height: calc(100svh - 20px);
+    padding: 18px;
+  }
+  .gallery-modal-header {
+    grid-template-columns: 1fr;
+  }
+  .gallery-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+  .gallery-modal-header .section-heading {
+    padding-right: 50px;
+  }
   .gallery-room-heading { grid-template-columns: 1fr; }
   .image-carousel { aspect-ratio: 1.25 / 1; }
   .carousel-arrow { width: 40px; height: 48px; font-size: 1.7rem; }
