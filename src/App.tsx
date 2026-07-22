@@ -382,7 +382,10 @@ function App() {
                 through the property, or unwind in comfortable living spaces
                 prepared for easy arrivals and restful evenings.
               </p>
-              <div className="property-highlights" aria-label="Property highlights">
+              <div
+                className="property-highlights"
+                aria-label="Property highlights"
+              >
                 {[
                   "5+ acre private vineyard setting",
                   "Spacious home for families and groups",
@@ -484,7 +487,7 @@ function App() {
         <address>1000 Vintage Dr, Oakley, CA 94561</address>
         <div className="footer-contact">
           <span>Contact Us On:</span>
-          <a href="mailto:1000vintagepm@gmail.com">1000vintagepm@gmail.com</a>
+          <a href="mailto:1000vintage@gmail.com">1000vintage@gmail.com</a>
           <a href="tel:+1234567890">+1 (925)-549-2107</a>
         </div>
       </footer>
