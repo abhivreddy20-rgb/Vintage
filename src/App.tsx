@@ -177,9 +177,8 @@ type GalleryImage = {
   alt: string;
 };
 
-const apiBaseUrl = import.meta.env.DEV ? "http://127.0.0.1:4175" : "";
 const enquiryEndpoints = import.meta.env.DEV
-  ? [`${apiBaseUrl}/api/enquiries`]
+  ? ["/api/enquiries"]
   : ["/api/enquiries", "/.netlify/functions/enquiries"];
 const savedButEmailFailedMessage =
   "Enquiry was saved, but the admin email could not be sent.";
